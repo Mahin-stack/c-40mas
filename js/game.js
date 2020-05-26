@@ -1,4 +1,3 @@
-
 class Game {
   constructor(){
 
@@ -30,7 +29,6 @@ class Game {
       form.display();
     }
 
-    //car1 is the label it can be also written as "car" to relate the image as done in the trex game;
     car1 = createSprite(100,200);
     car1.addImage("car1",car_1);
     car1.scale = 0.2;
@@ -44,28 +42,26 @@ class Game {
     car4.addImage("car4",car_4);
     car4.scale = 0.2;
     cars = [car1, car2, car3, car4];
-    
   }
 
   play(){
     form.hide();
-
+    player.getCarsAtEnd();
     Player.getPlayerInfo();
     
     if(allPlayers !== undefined){
-
-      background(rgb(150,20,180));
-      // the commented one was for horizontal one;
-      //image(track,-displayWidth*5,0,displayWidth*4,displayHeight);
-      image(track, 0,-displayHeight*4,displayWidth, displayHeight*5);
+      background(rgb(198,135,103));
+     image(track, 0,-displayHeight*4,displayWidth, displayHeight*5);
+     
       //var display_position = 100;
       
       //index of the array
       var index = 0;
 
       //x and y position of the cars
-      var x =200
-      var y 
+      var x = 175 ;
+      var y;
+     
 
       for(var plr in allPlayers){
         //add 1 to the index for every loop
@@ -73,21 +69,21 @@ class Game {
 
         //position the cars a little away from each other in x direction
         x = x + 200;
+      
         //use data form the database to display the cars in y direction
-       
         y = displayHeight - allPlayers[plr].distance;
-
+      
+       // console.log(index, player.index)
         if (index === player.index){
+          cars[index-1].x = x;
+        cars[index-1].y = y;
           stroke(10);
-          fill("yellow")
-         rect(x-50,y+33,75,75);
-          cars[index-1].position.x = x;
-          cars[index-1].position.y = y;
+          fill("red");
+          ellipse(x,y,60,60);
           cars[index - 1].shapeColor = "red";
           camera.position.x = displayWidth/2;
           camera.position.y = cars[index-1].y;
 
-      
         }
        
         //textSize(15);
@@ -96,15 +92,22 @@ class Game {
 
     }
 
-    if(keyIsDown(RIGHT_ARROW) && player.index !== null){
+    if(keyIsDown(UP_ARROW) && player.index !== null){
       player.distance +=10
       player.update();
     }
-  if(player.distance > 3990){
-    //2 = end state;
-gameState = 2
 
-  }
+    if(player.distance > 3860){
+      gameState = 2;
+      player.rank = player.rank + 1
+      Player.updateCarsAtEnd(player.rank);
+    }
+   
     drawSprites();
+  }
+
+  end(){
+    console.log("Game Ended");
+    console.log(player.rank);
   }
 }
